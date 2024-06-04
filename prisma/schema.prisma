@@ -1,0 +1,38 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Poster {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    name String @unique
+    quantity Int?
+    posterRequests PosterRequest[]
+}
+
+enum Role {
+    CHEF_EQUIPE
+    EQUIPIER
+    DIRECTEUR
+}
+
+model Employee {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    name String
+    role Role
+    posterRequests PosterRequest[]
+}
+
+model PosterRequest {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    poster Poster @relation(fields: [posterId], references: [id])
+    posterId String @db.ObjectId
+    employee Employee @relation(fields: [employeeId], references: [id])
+    employeeId String @db.ObjectId
+    quantity Int
+    createdAt DateTime @default(now())
+}
