@@ -3,6 +3,7 @@ import { getAllPosters } from "@/data/poster";
 import { AddEmployeeForm } from "./components/form-add-employee";
 import { AddPosterForm } from "./components/form-add-poster";
 import { BadgeEmployee } from "@/components/badge-employee";
+import { BadgePoster } from "@/components/badge-poster";
 
 export default async function Settings() {
   const employees = await getAllEmployees();
