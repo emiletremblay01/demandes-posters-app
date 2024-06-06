@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +34,11 @@ export function AddEmployeeForm() {
   function onSubmit(values: z.infer<typeof employeeSchema>) {
     startTransition(() => {
       addEmployee(values).then((result) => {
-        console.log(result);
+         if (result.error) {
+          toast(result.error);
+          return;
+        }
+        toast(result.success);
       });
     });
   }
