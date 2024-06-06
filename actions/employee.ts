@@ -23,7 +23,7 @@ export const addEmployee = async (data: z.infer<typeof employeeSchema>) => {
     revalidatePath("/settings");
     return { success: `${result.name} successfully added to database!` };
   } catch (error) {
-    return { error: "Erreur: " + error.message };
+    return { error: "Erreur interne!" };
   }
   
 };
