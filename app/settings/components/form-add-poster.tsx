@@ -17,23 +17,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
-import { employeeSchema } from "@/schemas";
-import { addEmployee } from "@/actions/employee";
+import { posterSchema } from "@/schemas";
+import { addPoster } from "@/actions/poster";
 
-export function AddEmployeeForm() {
+export function AddPosterForm() {
   const [isPending, startTransition] = useTransition();
   // 1. Define your form.
-  const form = useForm<z.infer<typeof employeeSchema>>({
-    resolver: zodResolver(employeeSchema),
+  const form = useForm<z.infer<typeof posterSchema>>({
+    resolver: zodResolver(posterSchema),
     defaultValues: {
       name: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof employeeSchema>) {
+  function onSubmit(values: z.infer<typeof posterSchema>) {
     startTransition(() => {
-      addEmployee(values).then((result) => {
+      addPoster(values).then((result) => {
          if (result.error) {
           toast(result.error);
           return;
@@ -51,9 +51,9 @@ export function AddEmployeeForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom</FormLabel>
+              <FormLabel>Titre</FormLabel>
               <FormControl>
-                <Input placeholder="Dwight Schrute" {...field} />
+                <Input placeholder="Dune part two" {...field} />
               </FormControl>
 
               <FormMessage />
