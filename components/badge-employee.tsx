@@ -4,13 +4,18 @@ import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 import { deleteEmployee } from "@/actions/employee";
+import { toast } from "sonner";
 export function BadgeEmployee(employee: Employee) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
     startTransition(() => {
       deleteEmployee(employee.id).then((result) => {
-        console.log(result);
+        if (result.error) {
+          toast(result.error);
+          return;
+        }
+        toast(result.success);
       });
     });
   };
