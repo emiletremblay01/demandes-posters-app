@@ -22,3 +22,5 @@ export const addEmployee = async (data: z.infer<typeof employeeSchema>) => {
   revalidatePath("/settings");
   return result;
 };
+
+export const deleteEmployee = async (id: string) => {};

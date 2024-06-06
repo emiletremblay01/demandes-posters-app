@@ -1,6 +1,6 @@
 import { getAllEmployees } from "@/data/employee";
 import { AddEmployeeForm } from "./components/form-add-employee";
-import { TableEmployees } from "@/components/table-employee";
+import { BadgeEmployee } from "@/components/badge-employee";
 
 export default async function Settings() {
   const employees = await getAllEmployees();
@@ -10,7 +10,11 @@ export default async function Settings() {
       <div className="border rounded-md max-w-sm p-2">
         <AddEmployeeForm />
       </div>
-      <TableEmployees employees={employees} />
+      <div className="flex flex-wrap gap-1">
+        {employees.map((employee) => (
+          <BadgeEmployee {...employee} key={employee.id} />
+        ))}
+      </div>
     </div>
   );
 }
