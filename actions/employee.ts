@@ -23,4 +23,16 @@ export const addEmployee = async (data: z.infer<typeof employeeSchema>) => {
   return result;
 };
 
-export const deleteEmployee = async (id: string) => {};
+export const deleteEmployee = async (id: string) => {
+  try {
+    const res = await prismadb.employee.delete({
+      where: {
+        id,
+      },
+    });
+    revalidatePath("/settings");
+    return { success: `${res.name} successfully deleted from database!` };
+  } catch (error) {
+    return { error: "Employee not found!" };
+  }
+};
