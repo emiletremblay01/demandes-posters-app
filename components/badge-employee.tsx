@@ -20,7 +20,7 @@ export function BadgeEmployee(employee: Employee) {
     });
   };
   return (
-    <div className="flex px-3 py-1 gap-2 items-center border w-fit rounded-full">
+    <div className="flex px-3 py-1 cursor-default gap-2 items-center border w-fit rounded-full">
       <div>{employee.name}</div>
       <Button
         variant="ghost"

@@ -20,7 +20,7 @@ export function BadgePoster(poster: Poster) {
     });
   };
   return (
-    <div className="flex px-3 py-1 gap-2 items-center border w-fit rounded-full">
+    <div className="flex px-3 py-1 gap-2 items-center border w-fit cursor-default rounded-full">
       <div>{poster.name}</div>
       <Button
         variant="ghost"

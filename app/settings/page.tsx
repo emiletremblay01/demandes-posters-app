@@ -9,7 +9,7 @@ export default async function Settings() {
   const employees = await getAllEmployees();
   const posters = await getAllPosters();
   return (
-    <div className="flex p-2 pt-16 gap-6">
+    <div className="flex p-2 pt-16 gap-6 container">
       <div className="w-full max-w-sm">
         <h1 className="font-bold text-xl">Ajouter un employé</h1>
         <div className="border rounded-md max-w-sm p-2">
