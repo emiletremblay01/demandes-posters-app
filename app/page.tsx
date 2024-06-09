@@ -1,4 +1,5 @@
 import { FormAddPosterRequest } from "@/components/form-add-poster-request";
+import { RequestActions } from "@/components/request-actions";
 import {
   Table,
   TableBody,
@@ -21,28 +22,22 @@ export default async function Home() {
     <Suspense>
       <div className="container flex flex-col items-center pt-20">
         <FormAddPosterRequest {...{ employees, posters }} />
-        <Table className="mx-auto mt-20 w-full max-w-sm">
+        <h1 className="mt-20 text-lg font-bold">Demandes de poster</h1>
+        <Table className="mx-auto w-full max-w-md">
           <TableHeader>
             <TableRow>
               <TableHead>Équipier</TableHead>
               <TableHead>Poster</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {posterRequests.map((request) => (
               <TableRow key={request.id}>
+                <TableCell>{request.employeeName}</TableCell>
+                <TableCell>{request.posterTitle}</TableCell>
                 <TableCell>
-                  {
-                    employees.find(
-                      (employee) => employee.id === request.employeeId,
-                    )?.name
-                  }
-                </TableCell>
-                <TableCell>
-                  {
-                    posters.find((poster) => poster.id === request.posterId)
-                      ?.name
-                  }
+                  <RequestActions request={request} />
                 </TableCell>
               </TableRow>
             ))}

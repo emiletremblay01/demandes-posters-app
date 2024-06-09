@@ -1,7 +1,5 @@
 "use server";
 
-import * as z from "zod";
-import { employeeSchema } from "@/schemas";
 import prismadb from "@/lib/prismadb";
 import { revalidatePath } from "next/cache";
 import { getEmployeeById } from "@/data/employee";
@@ -21,9 +19,8 @@ export const addPosterRequest = async (
     }
     const result = await prismadb.posterRequest.create({
       data: {
-        employeeId: employee.id,
-        posterId: poster.id,
-        quantity: 1,
+        employeeName: employee.name,
+        posterTitle: poster.name,
       },
     });
 
@@ -31,5 +28,42 @@ export const addPosterRequest = async (
     return { success: `Poster request successfully added to database!` };
   } catch (error) {
     return { error: "Erreur interne!" };
+  }
+};
+
+export const deletePosterRequest = async (id: string) => {
+  try {
+    const res = await prismadb.posterRequest.delete({
+      where: {
+        id,
+      },
+    });
+    revalidatePath("/");
+    return {
+      success: `Poster request successfully deleted from database!`,
+    };
+  } catch (error) {
+    console.error(error);
+    return { error: "Poster request not found!" };
+  }
+};
+
+export const approvePosterRequest = async (id: string) => {
+  try {
+    const res = await prismadb.posterRequest.update({
+      where: {
+        id,
+      },
+      data: {
+        isAccepted: true,
+      },
+    });
+    revalidatePath("/");
+    return {
+      success: `Poster request successfully approved!`,
+    };
+  } catch (error) {
+    console.error(error);
+    return { error: "Poster request not found!" };
   }
 };
