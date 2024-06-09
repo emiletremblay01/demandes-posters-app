@@ -11,7 +11,7 @@ model Poster {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     name String @unique
     quantity Int?
-    posterRequests PosterRequest[]
+
 }
 
 enum Role {
@@ -24,15 +24,12 @@ model Employee {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     name String
     role Role
-    posterRequests PosterRequest[]
 }
 
 model PosterRequest {
     id String @id @default(auto()) @map("_id") @db.ObjectId
-    poster Poster @relation(fields: [posterId], references: [id])
-    posterId String @db.ObjectId
-    employee Employee @relation(fields: [employeeId], references: [id])
-    employeeId String @db.ObjectId
-    quantity Int
+    posterTitle String
+    employeeName String
+    isAccepted Boolean @default(false)
     createdAt DateTime @default(now())
 }

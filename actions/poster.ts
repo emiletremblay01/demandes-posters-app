@@ -10,21 +10,22 @@ export const addPoster = async (data: z.infer<typeof posterSchema>) => {
     if (!validatedFields.success) {
       return { error: "Invalid Fields!" };
     }
-  
+
     const { name } = validatedFields.data;
-  
+
     const result = await prismadb.poster.create({
       data: {
         name,
       },
     });
-  
+
     revalidatePath("/settings");
-    return { success: `Poster "${result.name}" successfully added to database!` };
+    return {
+      success: `Poster "${result.name}" successfully added to database!`,
+    };
   } catch (error) {
     return { error: "Erreur interne!" };
   }
-  
 };
 
 export const deletePoster = async (id: string) => {
@@ -35,8 +36,11 @@ export const deletePoster = async (id: string) => {
       },
     });
     revalidatePath("/settings");
-    return { success: `Poster "${res.name}" successfully deleted from database!` };
+    return {
+      success: `Poster "${res.name}" successfully deleted from database!`,
+    };
   } catch (error) {
+    console.error(error);
     return { error: "Poster not found!" };
   }
 };
