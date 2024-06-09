@@ -1,7 +1,7 @@
 "use client";
 
 import type { Employee, Poster } from "@prisma/client";
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export function Combobox({
   data,
@@ -27,9 +28,25 @@ export function Combobox({
   data: (Employee | Poster)[];
   placeholder?: string;
 }) {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+  const [idValue, setIdValue] = useState("");
 
+  useEffect(() => {
+    const employee = searchParams.get("employee");
+    const poster = searchParams.get("poster");
+    if ("role" in data[0]) {
+      router.replace(`/?employee=${idValue}&poster=${poster}`, {
+        scroll: false,
+      });
+      return;
+    }
+    router.replace(`/?employee=${employee}&poster=${idValue}`, {
+      scroll: false,
+    });
+  }, [idValue]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -57,13 +74,14 @@ export function Combobox({
                   value={item.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
+                    setIdValue(item.id);
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === item.name ? "opacity-100" : "opacity-0"
+                      value === item.name ? "opacity-100" : "opacity-0",
                     )}
                   />
                   {item.name}
