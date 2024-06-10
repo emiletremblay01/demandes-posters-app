@@ -37,7 +37,17 @@ export function RequestActions({ request }: { request: PosterRequest }) {
   return (
     <div className="flex gap-1">
       {request.isAccepted ? (
-        <Badge variant="secondary">Approuvé</Badge>
+        <>
+          <Badge variant="secondary">Approuvé</Badge>
+          <Button
+            onClick={handleDelete}
+            disabled={isPending}
+            className="group h-fit rounded-full p-0"
+            variant="ghost"
+          >
+            <XCircle className="size-6 text-muted-foreground group-hover:text-red-400" />{" "}
+          </Button>
+        </>
       ) : (
         <>
           <Button

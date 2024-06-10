@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 import { deleteEmployee } from "@/actions/employee";
 import { toast } from "sonner";
+import { Badge } from "./ui/badge";
 export function BadgeEmployee(employee: Employee) {
   const [isPending, startTransition] = useTransition();
 
@@ -20,16 +21,19 @@ export function BadgeEmployee(employee: Employee) {
     });
   };
   return (
-    <div className="flex px-3 py-1 cursor-default gap-2 items-center border w-fit rounded-full">
+    <Badge
+      variant="outline"
+      className="flex w-fit cursor-default items-center gap-2 rounded-full border px-3 py-1"
+    >
       <div>{employee.name}</div>
       <Button
         variant="ghost"
-        className="p-0 h-fit"
+        className="h-fit p-0"
         disabled={isPending}
         onClick={handleDelete}
       >
-        <XIcon className="size-4 translate-y-px" />
+        <XIcon className="size-4" />
       </Button>
-    </div>
+    </Badge>
   );
 }

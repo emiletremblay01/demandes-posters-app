@@ -4,19 +4,21 @@ import { Home, Settings } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 export default function Navbar() {
   return (
-    <nav className="h-20 flex items-center p-2 w-full border-b">
-      <div className="flex gap-2">
-        <Button asChild size="icon">
-          <Link href="/">
-            <Home />
+    <nav className="flex h-20 w-full items-center border-b p-2">
+      <div className="flex w-full items-center justify-between">
+        <Button asChild variant="ghost">
+          <Link href="/" className="text-lg font-bold uppercase">
+            Demandes Posters App
           </Link>
         </Button>
-        <Button asChild size="icon">
-          <Link href="/settings">
-            <Settings />
-          </Link>
-        </Button>
-        <ModeToggle />
+        <div className="flex gap-2">
+          <Button asChild size="icon" variant="outline">
+            <Link href="/settings">
+              <Settings />
+            </Link>
+          </Button>
+          <ModeToggle />
+        </div>
       </div>
     </nav>
   );
