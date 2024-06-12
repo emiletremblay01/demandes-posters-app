@@ -29,6 +29,7 @@ export function Combobox({
   placeholder?: string;
 }) {
   const searchParams = useSearchParams();
+
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -54,7 +55,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {value
             ? data.find((item) => item.name === value)?.name

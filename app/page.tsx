@@ -1,14 +1,13 @@
 import { FormAddPosterRequest } from "@/components/form-add-poster-request";
-import { RequestActions } from "@/components/request-actions";
+import { SmoothCounter } from "@/components/smooth-counter";
+import { TabsContainer } from "@/components/tabs-container";
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { getAllEmployees } from "@/data/employee";
 import { getAllPosters } from "@/data/poster";
 import { getAllPosterRequests } from "@/data/poster-request";
@@ -18,31 +17,34 @@ export default async function Home() {
   const employees = await getAllEmployees();
   const posters = await getAllPosters();
   const posterRequests = await getAllPosterRequests();
+  const numberOfPosterRequestsApproved = posterRequests.filter(
+    (posterRequest) => posterRequest.isAccepted,
+  ).length;
   return (
     <Suspense>
-      <div className="container flex flex-col items-center pt-20">
-        <FormAddPosterRequest {...{ employees, posters }} />
-        <h1 className="mt-20 text-lg font-bold">Demandes de poster</h1>
-        <Table className="mx-auto w-full max-w-md">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Équipier</TableHead>
-              <TableHead>Poster</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {posterRequests.map((request) => (
-              <TableRow key={request.id}>
-                <TableCell>{request.employeeName}</TableCell>
-                <TableCell>{request.posterTitle}</TableCell>
-                <TableCell>
-                  <RequestActions request={request} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="container flex h-full flex-col items-center py-20 lg:flex-row lg:items-start lg:gap-4">
+        <div className="flex h-full flex-col gap-4">
+          <FormAddPosterRequest {...{ employees, posters }} />
+          <Card className="mt-8 h-full w-full lg:mt-0">
+            <CardHeader>
+              <CardTitle>Statistiques</CardTitle>
+              <CardDescription>
+                <SmoothCounter count={numberOfPosterRequestsApproved} />
+              </CardDescription>
+            </CardHeader>
+            <CardContent></CardContent>
+          </Card>
+        </div>
+
+        <Card className="mt-8 h-full w-full lg:mt-0">
+          <CardHeader>
+            <CardTitle>Demandes</CardTitle>
+            <CardDescription>Gérez vos demandes de poster.</CardDescription>
+          </CardHeader>
+          <CardContent className="h-full">
+            <TabsContainer posterRequests={posterRequests} />
+          </CardContent>
+        </Card>
       </div>
     </Suspense>
   );
