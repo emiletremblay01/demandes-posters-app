@@ -23,6 +23,7 @@ export function TabsContainer({
       row: request.employeeName,
     };
   });
+
   const transformedData = graphData.reduce(
     (acc: { column: string; rows: string[] }[], current) => {
       // Find if there is already an object with the current column
@@ -40,6 +41,15 @@ export function TabsContainer({
     },
     [],
   );
+
+  const approvedPosterRequests = posterRequests.filter(
+    (posterRequest) => posterRequest.isAccepted,
+  );
+
+  const unapprovedPosterRequests = posterRequests.filter(
+    (posterRequest) => !posterRequest.isAccepted,
+  );
+
   return (
     <Tabs defaultValue="table" className="h-full w-full">
       <TabsList className="w-full">
@@ -48,6 +58,9 @@ export function TabsContainer({
         </TabsTrigger>
         <TabsTrigger value="graph" className="flex-1">
           Graph
+        </TabsTrigger>
+        <TabsTrigger value="historique" className="flex-1">
+          Historique
         </TabsTrigger>
       </TabsList>
       <TabsContent value="table" className="">
@@ -61,7 +74,7 @@ export function TabsContainer({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {posterRequests.map((request) => (
+              {unapprovedPosterRequests.map((request) => (
                 <TableRow key={request.id}>
                   <TableCell>{request.employeeName}</TableCell>
                   <TableCell>{request.posterTitle}</TableCell>
@@ -94,6 +107,30 @@ export function TabsContainer({
               </Table>
             </div>
           ))}
+        </div>
+      </TabsContent>
+      <TabsContent value="historique" className="">
+        <div className="h-full w-full overflow-auto rounded border">
+          <Table className="h-full w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Équipier</TableHead>
+                <TableHead>Poster</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {approvedPosterRequests.map((request) => (
+                <TableRow key={request.id}>
+                  <TableCell>{request.employeeName}</TableCell>
+                  <TableCell>{request.posterTitle}</TableCell>
+                  <TableCell>
+                    <RequestActions request={request} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </TabsContent>
     </Tabs>

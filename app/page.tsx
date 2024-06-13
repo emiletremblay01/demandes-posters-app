@@ -31,9 +31,9 @@ export default async function Home() {
               <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center">
+              <div className="mt-10 flex h-full flex-col items-center justify-center">
                 <SmoothCounter count={numberOfPosterRequestsApproved} />
-                <div className="text-muted-foreground"> posters donnés</div>
+                <div className="text-muted-foreground">posters donnés</div>
               </div>
             </CardContent>
           </Card>
