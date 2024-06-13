@@ -16,7 +16,7 @@ export default async function Settings() {
   const employees = await getAllEmployees();
   const posters = await getAllPosters();
   return (
-    <div className="container flex flex-col items-center gap-12 p-2 pt-16">
+    <div className="container flex flex-col items-center gap-12 p-8 py-20">
       <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-stretch">
         <Card className="w-72 shrink-0">
           <CardHeader>
