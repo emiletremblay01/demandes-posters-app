@@ -34,7 +34,7 @@ export function AddEmployeeForm() {
   function onSubmit(values: z.infer<typeof employeeSchema>) {
     startTransition(() => {
       addEmployee(values).then((result) => {
-         if (result.error) {
+        if (result.error) {
           toast(result.error);
           return;
         }
@@ -60,7 +60,7 @@ export function AddEmployeeForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" className="w-full" disabled={isPending}>
           Ajouter
         </Button>
       </form>

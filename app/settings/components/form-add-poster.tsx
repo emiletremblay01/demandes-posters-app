@@ -34,7 +34,7 @@ export function AddPosterForm() {
   function onSubmit(values: z.infer<typeof posterSchema>) {
     startTransition(() => {
       addPoster(values).then((result) => {
-         if (result.error) {
+        if (result.error) {
           toast(result.error);
           return;
         }
@@ -60,7 +60,7 @@ export function AddPosterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" className="w-full" disabled={isPending}>
           Ajouter
         </Button>
       </form>

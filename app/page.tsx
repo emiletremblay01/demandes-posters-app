@@ -28,11 +28,14 @@ export default async function Home() {
           <Card className="mt-8 h-full w-full lg:mt-0">
             <CardHeader>
               <CardTitle>Statistiques</CardTitle>
-              <CardDescription>
-                <SmoothCounter count={numberOfPosterRequestsApproved} />
-              </CardDescription>
+              <CardDescription></CardDescription>
             </CardHeader>
-            <CardContent></CardContent>
+            <CardContent>
+              <div className="flex flex-col items-center">
+                <SmoothCounter count={numberOfPosterRequestsApproved} />
+                <div className="text-muted-foreground"> posters donnés</div>
+              </div>
+            </CardContent>
           </Card>
         </div>
 
