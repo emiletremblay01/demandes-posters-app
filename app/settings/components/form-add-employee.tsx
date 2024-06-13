@@ -15,6 +15,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useTransition } from "react";
 import { employeeSchema } from "@/schemas";
@@ -27,6 +34,7 @@ export function AddEmployeeForm() {
     resolver: zodResolver(employeeSchema),
     defaultValues: {
       name: "",
+      role: "EQUIPIER",
     },
   });
 
@@ -56,6 +64,29 @@ export function AddEmployeeForm() {
                 <Input placeholder="Dwight Schrute" {...field} />
               </FormControl>
 
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Rôle</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selectionner un rôle" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="EQUIPIER">Équipier</SelectItem>
+                  <SelectItem value="CHEF_EQUIPE">Chef d'équipe</SelectItem>
+                  <SelectItem value="DIRECTEUR">Directeur</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription></FormDescription>
               <FormMessage />
             </FormItem>
           )}
