@@ -54,7 +54,7 @@ export const FormAddPosterRequest = ({
         <CardHeader>
           <CardTitle>Créer une demande</CardTitle>
           <CardDescription>
-            Créer une demande de poster d'un équipier.
+            Créer une demande de poster d&apos;un équipier.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">

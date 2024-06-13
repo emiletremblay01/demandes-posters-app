@@ -82,7 +82,9 @@ export function AddEmployeeForm() {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="EQUIPIER">Équipier</SelectItem>
-                  <SelectItem value="CHEF_EQUIPE">Chef d'équipe</SelectItem>
+                  <SelectItem value="CHEF_EQUIPE">
+                    Chef d&apos;équipe
+                  </SelectItem>
                   <SelectItem value="DIRECTEUR">Directeur</SelectItem>
                 </SelectContent>
               </Select>

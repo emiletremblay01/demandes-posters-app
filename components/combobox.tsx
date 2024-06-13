@@ -1,10 +1,9 @@
 "use client";
 
 import type { Employee, Poster } from "@prisma/client";
-import { useState, useEffect } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -19,7 +18,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useSearchParams, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function Combobox({
   data,
