@@ -11,7 +11,7 @@ export default function Navbar() {
             Demandes Posters App
           </Link>
         </Button>
-        <div className="flex gap-2">
+        <div className="flex gap-2 pr-4">
           <Button asChild size="icon" variant="outline">
             <Link href="/settings">
               <Settings />

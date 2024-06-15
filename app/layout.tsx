@@ -24,7 +24,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="h-screen flex flex-col">
+          <div className="flex h-screen flex-col lg:overflow-clip">
             <Navbar />
             {children}
           </div>

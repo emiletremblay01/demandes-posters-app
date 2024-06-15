@@ -1,4 +1,6 @@
 "use client";
+import { RequestActions } from "@/components/request-actions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -8,40 +10,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import type { PosterRequest } from "@prisma/client";
-import { RequestActions } from "@/components/request-actions";
 
 export function TabsContainer({
   posterRequests,
 }: {
   posterRequests: PosterRequest[];
 }) {
-  const graphData = posterRequests.map((request) => {
-    return {
-      column: request.posterTitle,
-      row: request.employeeName,
-    };
-  });
-
-  const transformedData = graphData.reduce(
-    (acc: { column: string; rows: string[] }[], current) => {
-      // Find if there is already an object with the current column
-      let found = acc.find((item) => item.column === current.column);
-
-      if (found) {
-        // If found, push the row into the rows array
-        found.rows.push(current.row);
-      } else {
-        // If not found, create a new object with the current column and row
-        acc.push({ column: current.column, rows: [current.row] });
-      }
-
-      return acc;
-    },
-    [],
-  );
-
   const approvedPosterRequests = posterRequests.filter(
     (posterRequest) => posterRequest.isAccepted,
   );
@@ -50,88 +25,120 @@ export function TabsContainer({
     (posterRequest) => !posterRequest.isAccepted,
   );
 
+  const postersWithRequests: {
+    column: string;
+    rows: PosterRequest[];
+  }[] = [];
+
+  for (const request of unapprovedPosterRequests) {
+    const poster = postersWithRequests.find(
+      (poster) => poster.column === request.posterTitle,
+    );
+    if (poster) {
+      poster.rows.push(request);
+    } else {
+      postersWithRequests.push({
+        column: request.posterTitle,
+        rows: [request],
+      });
+    }
+  }
+
   return (
     <Tabs defaultValue="table" className="h-full w-full">
-      <TabsList className="w-full">
+      <TabsList className="mb-2 w-full">
         <TabsTrigger value="table" className="flex-1">
-          Table
+          Par demandes
         </TabsTrigger>
         <TabsTrigger value="graph" className="flex-1">
-          Graph
+          Par posters
         </TabsTrigger>
         <TabsTrigger value="historique" className="flex-1">
           Historique
         </TabsTrigger>
       </TabsList>
       <TabsContent value="table" className="">
-        <div className="h-full w-full overflow-auto rounded border">
-          <Table className="h-full w-full">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Équipier</TableHead>
-                <TableHead>Poster</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {unapprovedPosterRequests.map((request) => (
-                <TableRow key={request.id}>
-                  <TableCell>{request.employeeName}</TableCell>
-                  <TableCell>{request.posterTitle}</TableCell>
-                  <TableCell>
-                    <RequestActions request={request} />
-                  </TableCell>
+        <ScrollArea className="h-[500px] w-full">
+          <div className="h-full w-full overflow-auto rounded border">
+            <Table className="h-full w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Équipier</TableHead>
+                  <TableHead>Poster</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {unapprovedPosterRequests.map((request) => (
+                  <TableRow key={request.id}>
+                    <TableCell>{request.employeeName}</TableCell>
+                    <TableCell>{request.posterTitle}</TableCell>
+                    <TableCell>
+                      <RequestActions request={request} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </ScrollArea>
       </TabsContent>
       <TabsContent value="graph">
-        <div className="flex w-full flex-wrap items-start gap-2">
-          {transformedData.map((data) => (
-            <div key={data.column} className="rounded border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="">{data.column}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.rows.map((row) => (
-                    <TableRow key={row} className="p-0">
-                      <TableCell className="px-4 py-2">{row}</TableCell>
+        <ScrollArea className="h-[500px] w-full">
+          <div className="flex w-full flex-wrap items-start gap-4">
+            {postersWithRequests.map((data) => (
+              <div key={data.column} className="w-40 truncate rounded border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="">{data.column}</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ))}
-        </div>
+                  </TableHeader>
+                  <TableBody>
+                    {data.rows.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell className="group relative flex w-full items-center p-0 px-4">
+                          <div className="flex-1 truncate py-2 opacity-100 transition group-hover:opacity-0">
+                            {row.employeeName}
+                          </div>
+                          <div className="absolute left-0 flex w-full justify-center opacity-0 transition group-hover:opacity-100">
+                            <RequestActions request={row} />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
       </TabsContent>
       <TabsContent value="historique" className="">
-        <div className="h-full w-full overflow-auto rounded border">
-          <Table className="h-full w-full">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Équipier</TableHead>
-                <TableHead>Poster</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {approvedPosterRequests.map((request) => (
-                <TableRow key={request.id}>
-                  <TableCell>{request.employeeName}</TableCell>
-                  <TableCell>{request.posterTitle}</TableCell>
-                  <TableCell>
-                    <RequestActions request={request} />
-                  </TableCell>
+        <ScrollArea className="h-[500px] w-full">
+          <div className="h-full w-full overflow-auto rounded border">
+            <Table className="h-full w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Équipier</TableHead>
+                  <TableHead>Poster</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {approvedPosterRequests.map((request) => (
+                  <TableRow key={request.id}>
+                    <TableCell>{request.employeeName}</TableCell>
+                    <TableCell>{request.posterTitle}</TableCell>
+                    <TableCell>
+                      <RequestActions request={request} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </ScrollArea>
       </TabsContent>
     </Tabs>
   );

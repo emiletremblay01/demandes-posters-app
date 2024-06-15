@@ -25,7 +25,7 @@ export default async function Home() {
       <div className="container flex h-full flex-col items-center py-20 lg:flex-row lg:items-start lg:gap-4">
         <div className="flex h-full flex-col gap-4">
           <FormAddPosterRequest {...{ employees, posters }} />
-          <Card className="mt-8 h-full w-full lg:mt-0">
+          <Card className="mt-8 hidden h-full w-full lg:mt-0 lg:block">
             <CardHeader>
               <CardTitle>Statistiques</CardTitle>
               <CardDescription></CardDescription>
