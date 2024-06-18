@@ -83,68 +83,72 @@ export const columns: ColumnDef<PosterRequest>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const [isPending, startTransition] = useTransition();
       const { id, isAccepted } = row.original;
-
-      const handleApprove = async () => {
-        startTransition(() => {
-          approvePosterRequest(id).then((res) => {
-            if (res.success) {
-              toast(res.success);
-              return;
-            }
-            toast(res.error);
-          });
-        });
-      };
-
-      const handleDelete = async () => {
-        startTransition(() => {
-          deletePosterRequest(id).then((res) => {
-            if (res.success) {
-              toast(res.success);
-              return;
-            }
-            toast(res.error);
-          });
-        });
-      };
-      return (
-        <div className="flex gap-1">
-          {isAccepted ? (
-            <>
-              <Badge variant="secondary">Approuvé</Badge>
-              <Button
-                onClick={handleDelete}
-                disabled={isPending}
-                className="group h-fit rounded-full p-0"
-                variant="ghost"
-              >
-                <XCircle className="size-6 text-muted-foreground group-hover:text-red-400" />{" "}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                onClick={handleApprove}
-                disabled={isPending}
-                className="group h-fit rounded-full p-0"
-                variant="ghost"
-              >
-                <CheckCircle2 className="size-6 text-muted-foreground group-hover:text-green-400" />{" "}
-              </Button>
-              <Button
-                onClick={handleDelete}
-                disabled={isPending}
-                className="group h-fit rounded-full p-0"
-                variant="ghost"
-              >
-                <XCircle className="size-6 text-muted-foreground group-hover:text-red-400" />{" "}
-              </Button>
-            </>
-          )}
-        </div>
-      );
+      return <Actions id={id} isAccepted={isAccepted} />;
     },
   },
 ];
+
+function Actions({ id, isAccepted }: { id: string; isAccepted: boolean }) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleApprove = async () => {
+    startTransition(() => {
+      approvePosterRequest(id).then((res) => {
+        if (res.success) {
+          toast(res.success);
+          return;
+        }
+        toast(res.error);
+      });
+    });
+  };
+
+  const handleDelete = async () => {
+    startTransition(() => {
+      deletePosterRequest(id).then((res) => {
+        if (res.success) {
+          toast(res.success);
+          return;
+        }
+        toast(res.error);
+      });
+    });
+  };
+  return (
+    <div className="flex gap-1">
+      {isAccepted ? (
+        <>
+          <Badge variant="secondary">Approuvé</Badge>
+          <Button
+            onClick={handleDelete}
+            disabled={isPending}
+            className="group h-fit rounded-full p-0"
+            variant="ghost"
+          >
+            <XCircle className="size-6 text-muted-foreground group-hover:text-red-400" />{" "}
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            onClick={handleApprove}
+            disabled={isPending}
+            className="group h-fit rounded-full p-0"
+            variant="ghost"
+          >
+            <CheckCircle2 className="size-6 text-muted-foreground group-hover:text-green-400" />{" "}
+          </Button>
+          <Button
+            onClick={handleDelete}
+            disabled={isPending}
+            className="group h-fit rounded-full p-0"
+            variant="ghost"
+          >
+            <XCircle className="size-6 text-muted-foreground group-hover:text-red-400" />{" "}
+          </Button>
+        </>
+      )}
+    </div>
+  );
+}
