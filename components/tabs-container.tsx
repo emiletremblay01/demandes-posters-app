@@ -10,8 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DataTable } from "@/app/components/data-table";
-import { columns } from "@/app/components/columns";
+import { DataTable } from "@/components/datatable/data-table";
+import { columns } from "@/components/datatable/columns";
 
 import type { PosterRequest } from "@prisma/client";
 import {
