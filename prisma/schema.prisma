@@ -9,9 +9,9 @@ generator client {
 
 model Poster {
     id String @id @default(auto()) @map("_id") @db.ObjectId
-    name String @unique
+    name String
     quantity Int?
-
+    @@unique([name])
 }
 
 enum Role {
@@ -30,6 +30,7 @@ model PosterRequest {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     posterTitle String
     employeeName String
+    employeeRole Role @default(EQUIPIER)
     isAccepted Boolean @default(false)
     createdAt DateTime @default(now())
 }

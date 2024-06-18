@@ -13,7 +13,7 @@ import { getAllPosters } from "@/data/poster";
 import { getAllPosterRequests } from "@/data/poster-request";
 import { Suspense } from "react";
 
-export default async function Home() {
+export default async function HomePage() {
   const employees = await getAllEmployees();
   const posters = await getAllPosters();
   const posterRequests = await getAllPosterRequests();
@@ -22,7 +22,7 @@ export default async function Home() {
   ).length;
   return (
     <Suspense>
-      <div className="container flex h-full flex-col items-center py-20 lg:flex-row lg:items-start lg:gap-4">
+      <div className="container flex h-full flex-1 flex-col items-center py-4 lg:flex-row lg:items-stretch lg:gap-4">
         <div className="flex h-full flex-col gap-4">
           <FormAddPosterRequest {...{ employees, posters }} />
           <Card className="mt-8 hidden h-full w-full lg:mt-0 lg:block">
@@ -39,12 +39,12 @@ export default async function Home() {
           </Card>
         </div>
 
-        <Card className="mt-8 h-full w-full lg:mt-0">
+        <Card className="mt-8 h-fit w-full lg:mt-0 lg:h-full">
           <CardHeader>
             <CardTitle>Demandes</CardTitle>
             <CardDescription>Gérez vos demandes de poster.</CardDescription>
           </CardHeader>
-          <CardContent className="h-full">
+          <CardContent className="min-h-fit">
             <TabsContainer posterRequests={posterRequests} />
           </CardContent>
         </Card>

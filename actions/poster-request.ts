@@ -21,6 +21,7 @@ export const addPosterRequest = async (
       data: {
         employeeName: employee.name,
         posterTitle: poster.name,
+        employeeRole: employee.role,
       },
     });
 

@@ -10,7 +10,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DataTable } from "@/app/components/data-table";
+import { columns } from "@/app/components/columns";
+
 import type { PosterRequest } from "@prisma/client";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+
+import {
+  BarChart,
+  Bar,
+  ResponsiveContainer,
+  Tooltip,
+  YAxis,
+  XAxis,
+} from "recharts";
 
 export function TabsContainer({
   posterRequests,
@@ -25,94 +43,85 @@ export function TabsContainer({
     (posterRequest) => !posterRequest.isAccepted,
   );
 
-  const postersWithRequests: {
-    column: string;
-    rows: PosterRequest[];
-  }[] = [];
+  type GraphObject = {
+    employeeName: string;
+    receivedPosters: string[];
+    numberOfPosterReceived: number;
+  };
+  const graphObjects: GraphObject[] = approvedPosterRequests.map(
+    (posterRequest) => {
+      const receivedPosters = approvedPosterRequests
+        .filter((pr) => pr.employeeName === posterRequest.employeeName)
+        .map((pr) => pr.posterTitle);
+      return {
+        employeeName: posterRequest.employeeName,
+        numberOfPosterReceived: receivedPosters.length,
+        receivedPosters: receivedPosters,
+      };
+    },
+  );
+  // remove duplicates from graphObjects
+  const uniqueGraphObjects = graphObjects.filter(
+    (graphObject, index, self) =>
+      index ===
+      self.findIndex((t) => t.employeeName === graphObject.employeeName),
+  );
 
-  for (const request of unapprovedPosterRequests) {
-    const poster = postersWithRequests.find(
-      (poster) => poster.column === request.posterTitle,
-    );
-    if (poster) {
-      poster.rows.push(request);
-    } else {
-      postersWithRequests.push({
-        column: request.posterTitle,
-        rows: [request],
-      });
-    }
-  }
+  // sort by number of posters received
+  uniqueGraphObjects.sort(
+    (a, b) => b.numberOfPosterReceived - a.numberOfPosterReceived,
+  );
 
   return (
-    <Tabs defaultValue="table" className="h-full w-full">
+    <Tabs defaultValue="table" className="w-full">
       <TabsList className="mb-2 w-full">
         <TabsTrigger value="table" className="flex-1">
-          Par demandes
+          Table
         </TabsTrigger>
         <TabsTrigger value="graph" className="flex-1">
-          Par posters
+          Graphique
         </TabsTrigger>
         <TabsTrigger value="historique" className="flex-1">
           Historique
         </TabsTrigger>
       </TabsList>
       <TabsContent value="table" className="">
-        <ScrollArea className="h-[500px] w-full">
-          <div className="h-full w-full overflow-auto rounded border">
-            <Table className="h-full w-full">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Équipier</TableHead>
-                  <TableHead>Poster</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {unapprovedPosterRequests.map((request) => (
-                  <TableRow key={request.id}>
-                    <TableCell>{request.employeeName}</TableCell>
-                    <TableCell>{request.posterTitle}</TableCell>
-                    <TableCell>
-                      <RequestActions request={request} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </ScrollArea>
+        <DataTable columns={columns} data={unapprovedPosterRequests} />
       </TabsContent>
       <TabsContent value="graph">
-        <ScrollArea className="h-[500px] w-full">
-          <div className="flex w-full flex-wrap items-start gap-4">
-            {postersWithRequests.map((data) => (
-              <div key={data.column} className="w-40 truncate rounded border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="">{data.column}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {data.rows.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell className="group relative flex w-full items-center p-0 px-4">
-                          <div className="flex-1 truncate py-2 opacity-100 transition group-hover:opacity-0">
-                            {row.employeeName}
+        <Card>
+          <CardHeader>Nombres de posters reçus par employé</CardHeader>
+          <CardContent className="h-96">
+            <ResponsiveContainer width={"100%"} height={"100%"}>
+              <BarChart data={uniqueGraphObjects} width={48} height={48}>
+                <Tooltip
+                  content={(props) => (
+                    <div>
+                      {props.payload &&
+                        props.payload.map((item) => (
+                          <div
+                            key={item.name}
+                            className="rounded-md bg-muted-foreground px-4 py-2 text-primary shadow-lg"
+                          >
+                            <p>
+                              Posters reçus:{" "}
+                              {item.payload.receivedPosters.length}
+                            </p>
                           </div>
-                          <div className="absolute left-0 flex w-full justify-center opacity-0 transition group-hover:opacity-100">
-                            <RequestActions request={row} />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
+                        ))}
+                    </div>
+                  )}
+                />
+                <YAxis allowDecimals={false} dataKey="numberOfPosterReceived" />
+                <XAxis dataKey="employeeName" />
+                <Bar
+                  dataKey="numberOfPosterReceived"
+                  className="fill-primary"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </TabsContent>
       <TabsContent value="historique" className="">
         <ScrollArea className="h-[500px] w-full">
@@ -128,9 +137,13 @@ export function TabsContainer({
               <TableBody>
                 {approvedPosterRequests.map((request) => (
                   <TableRow key={request.id}>
-                    <TableCell>{request.employeeName}</TableCell>
-                    <TableCell>{request.posterTitle}</TableCell>
-                    <TableCell>
+                    <TableCell className="py-2">
+                      {request.employeeName}
+                    </TableCell>
+                    <TableCell className="py-2">
+                      {request.posterTitle}
+                    </TableCell>
+                    <TableCell className="py-2">
                       <RequestActions request={request} />
                     </TableCell>
                   </TableRow>

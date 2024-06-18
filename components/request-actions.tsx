@@ -1,20 +1,28 @@
 "use client";
-import type { PosterRequest } from "@prisma/client";
-import { Button } from "./ui/button";
+import {
+  approvePosterRequest,
+  deletePosterRequest,
+} from "@/actions/poster-request";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { useTransition } from "react";
-import {
-  deletePosterRequest,
-  approvePosterRequest,
-} from "@/actions/poster-request";
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
-export function RequestActions({ request }: { request: PosterRequest }) {
+export function RequestActions({
+  request,
+}: {
+  request: {
+    id: string;
+    isAccepted: boolean;
+  };
+}) {
   const [isPending, startTransition] = useTransition();
+  const { id, isAccepted } = request;
+
   const handleApprove = async () => {
     startTransition(() => {
-      approvePosterRequest(request.id).then((res) => {
+      approvePosterRequest(id).then((res) => {
         if (res.success) {
           toast(res.success);
           return;
@@ -23,9 +31,10 @@ export function RequestActions({ request }: { request: PosterRequest }) {
       });
     });
   };
+
   const handleDelete = async () => {
     startTransition(() => {
-      deletePosterRequest(request.id).then((res) => {
+      deletePosterRequest(id).then((res) => {
         if (res.success) {
           toast(res.success);
           return;
@@ -36,7 +45,7 @@ export function RequestActions({ request }: { request: PosterRequest }) {
   };
   return (
     <div className="flex gap-1">
-      {request.isAccepted ? (
+      {isAccepted ? (
         <>
           <Badge variant="secondary">Approuvé</Badge>
           <Button
