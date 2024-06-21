@@ -10,9 +10,11 @@ export default async function RootLayout({
 }) {
   const isAuth = await auth();
   console.log(isAuth);
-  if (!isAuth) {
-    redirect("/login");
-  }
+  {/* 
+    if (!isAuth) {
+      redirect("/login");
+    }
+*/}
   return (
     <div className="flex flex-col lg:h-dvh">
       <Navbar />
