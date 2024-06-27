@@ -7,6 +7,7 @@ import { getPosterById } from "@/data/poster";
 export const addPosterRequest = async (
   employeeId: string,
   posterId: string,
+  note: string | undefined,
 ) => {
   try {
     const employee = await getEmployeeById(employeeId);
@@ -22,6 +23,7 @@ export const addPosterRequest = async (
         employeeName: employee.name,
         posterTitle: poster.name,
         employeeRole: employee.role,
+        note,
       },
     });
 

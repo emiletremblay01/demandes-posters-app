@@ -31,6 +31,7 @@ model PosterRequest {
     posterTitle String
     employeeName String
     employeeRole Role @default(EQUIPIER)
+    note String?
     isAccepted Boolean @default(false)
     createdAt DateTime @default(now())
 }

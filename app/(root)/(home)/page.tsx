@@ -28,7 +28,6 @@ export default async function HomePage() {
           <Card className="mt-8 hidden h-full w-full lg:mt-0 lg:block">
             <CardHeader>
               <CardTitle>Statistiques</CardTitle>
-              <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex h-full flex-col items-center justify-center">

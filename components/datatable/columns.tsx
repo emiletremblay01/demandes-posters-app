@@ -81,7 +81,12 @@ export const columns: ColumnDef<PosterRequest>[] = [
     },
   },
   {
+    accessorKey: "note",
+    header: "Note",
+  },
+  {
     id: "actions",
+
     cell: ({ row }) => {
       const { id, isAccepted } = row.original;
       return <Actions id={id} isAccepted={isAccepted} />;
@@ -116,7 +121,7 @@ function Actions({ id, isAccepted }: { id: string; isAccepted: boolean }) {
     });
   };
   return (
-    <div className="flex gap-1">
+    <div className="float-right flex w-fit gap-1">
       {isAccepted ? (
         <>
           <Badge variant="secondary">Approuvé</Badge>
