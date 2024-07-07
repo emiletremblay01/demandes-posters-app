@@ -69,13 +69,13 @@ export const columns: ColumnDef<PosterRequest>[] = [
       const { employeeName, employeeRole } = row.original;
       return (
         <div className="flex gap-2">
+          <div>{employeeName}</div>
           {employeeRole != "EQUIPIER" &&
             (employeeRole == "DIRECTEUR" ? (
               <Badge variant="outline">Directeur</Badge>
             ) : (
               <Badge variant="outline">Chef d&apos;équipe</Badge>
             ))}
-          <div>{employeeName}</div>
         </div>
       );
     },
