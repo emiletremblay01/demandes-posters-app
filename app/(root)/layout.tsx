@@ -1,7 +1,7 @@
 import { auth } from "@/actions/auth";
 
 import { redirect } from "next/navigation";
-import Footer from "@/components/footer";
+
 import Navbar from "@/components/navbar";
 export default async function RootLayout({
   children,
@@ -20,7 +20,6 @@ export default async function RootLayout({
       <div className="flex flex-1 flex-col items-center overflow-y-auto">
         {children}
       </div>
-      <Footer />
     </div>
   );
 }

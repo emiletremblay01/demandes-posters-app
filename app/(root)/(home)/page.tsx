@@ -22,7 +22,7 @@ export default async function HomePage() {
   ).length;
   return (
     <Suspense>
-      <div className="container my-auto flex h-full flex-1 flex-col items-center py-4 lg:h-[760px] lg:max-h-[760px] lg:flex-row lg:items-stretch lg:gap-4">
+      <div className="container my-auto flex h-full flex-1 flex-col items-center py-4 lg:h-[800px] lg:max-h-[800px] lg:flex-row lg:items-stretch lg:gap-4">
         <div className="flex h-full flex-col gap-4">
           <FormAddPosterRequest {...{ employees, posters }} />
           <Card className="mt-8 hidden h-full w-full lg:mt-0 lg:block">
