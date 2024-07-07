@@ -38,9 +38,6 @@ export function DataTable<TData, TValue>({
   const [isRandomizeBtnEnabled, setIsRandomizeBtnEnabled] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   useEffect(() => {
-    console.log(rowSelection);
-    console.log(columnFilters);
-    console.log(sorting);
     if (Object.keys(rowSelection).length > 1) {
       setIsRandomizeBtnEnabled(true);
     } else {
