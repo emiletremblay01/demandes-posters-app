@@ -29,6 +29,7 @@ import {
   YAxis,
   XAxis,
 } from "recharts";
+import { ChartPosters } from "./chart-posters";
 
 export function TabsContainer({
   posterRequests,
@@ -89,39 +90,7 @@ export function TabsContainer({
         <DataTable columns={columns} data={unapprovedPosterRequests} />
       </TabsContent>
       <TabsContent value="graph">
-        <Card>
-          <CardHeader>Nombres de posters reçus par employé</CardHeader>
-          <CardContent className="h-96">
-            <ResponsiveContainer width={"100%"} height={"100%"}>
-              <BarChart data={uniqueGraphObjects} width={48} height={48}>
-                <Tooltip
-                  content={(props) => (
-                    <div>
-                      {props.payload &&
-                        props.payload.map((item) => (
-                          <div
-                            key={item.name}
-                            className="rounded-md bg-muted-foreground px-4 py-2 text-primary shadow-lg"
-                          >
-                            <p>
-                              Posters reçus:{" "}
-                              {item.payload.receivedPosters.length}
-                            </p>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                />
-                <YAxis allowDecimals={false} dataKey="numberOfPosterReceived" />
-                <XAxis dataKey="employeeName" />
-                <Bar
-                  dataKey="numberOfPosterReceived"
-                  className="fill-primary"
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+        <ChartPosters data={uniqueGraphObjects} />
       </TabsContent>
       <TabsContent value="historique" className="">
         <ScrollArea className="h-[500px] w-full">
