@@ -14,21 +14,6 @@ import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/datatable/columns";
 
 import type { PosterRequest } from "@prisma/client";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-
-import {
-  BarChart,
-  Bar,
-  ResponsiveContainer,
-  Tooltip,
-  YAxis,
-  XAxis,
-} from "recharts";
 import { ChartPosters } from "./chart-posters";
 
 export function TabsContainer({
