@@ -15,6 +15,7 @@ import { Suspense } from "react";
 
 export default async function HomePage() {
   const employees = await getAllEmployees();
+
   const posters = await getAllPosters();
   const posterRequests = await getAllPosterRequests();
   const numberOfPosterRequestsApproved = posterRequests.filter(

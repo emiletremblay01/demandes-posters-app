@@ -4,12 +4,17 @@ import prismadb from "@/lib/prismadb";
 import { revalidatePath } from "next/cache";
 import { getEmployeeById } from "@/data/employee";
 import { getPosterById } from "@/data/poster";
+import { auth } from "@/actions/auth";
 export const addPosterRequest = async (
   employeeId: string,
   posterId: string,
   note: string | undefined,
 ) => {
   try {
+    const isAuth = await auth();
+    if (!isAuth) {
+      return { error: "Unauthorized!" };
+    }
     const employee = await getEmployeeById(employeeId);
     if (!employee) {
       return { error: "Employee not found!" };
@@ -36,6 +41,10 @@ export const addPosterRequest = async (
 
 export const deletePosterRequest = async (id: string) => {
   try {
+    const isAuth = await auth();
+    if (!isAuth) {
+      return { error: "Unauthorized!" };
+    }
     const res = await prismadb.posterRequest.delete({
       where: {
         id,
@@ -53,6 +62,10 @@ export const deletePosterRequest = async (id: string) => {
 
 export const approvePosterRequest = async (id: string) => {
   try {
+    const isAuth = await auth();
+    if (!isAuth) {
+      return { error: "Unauthorized!" };
+    }
     const res = await prismadb.posterRequest.update({
       where: {
         id,

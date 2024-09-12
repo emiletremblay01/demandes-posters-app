@@ -1,19 +1,9 @@
-import { auth } from "@/actions/auth";
-
-import { redirect } from "next/navigation";
-
 import Navbar from "@/components/navbar";
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const isAuth = await auth();
-  console.log(isAuth);
-  if (!isAuth) {
-    redirect("/login");
-  }
-
   return (
     <div className="flex flex-col lg:h-dvh">
       <Navbar />

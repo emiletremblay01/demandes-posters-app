@@ -4,8 +4,13 @@ import * as z from "zod";
 import { posterSchema } from "@/schemas";
 import prismadb from "@/lib/prismadb";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/actions/auth";
 export const addPoster = async (data: z.infer<typeof posterSchema>) => {
   try {
+    const isAuth = await auth();
+    if (!isAuth) {
+      return { error: "Unauthorized!" };
+    }
     const validatedFields = posterSchema.safeParse(data);
     if (!validatedFields.success) {
       return { error: "Invalid Fields!" };
@@ -30,6 +35,10 @@ export const addPoster = async (data: z.infer<typeof posterSchema>) => {
 
 export const deletePoster = async (id: string) => {
   try {
+    const isAuth = await auth();
+    if (!isAuth) {
+      return { error: "Unauthorized!" };
+    }
     const res = await prismadb.poster.delete({
       where: {
         id,

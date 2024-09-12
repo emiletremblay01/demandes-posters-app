@@ -5,8 +5,13 @@ import { employeeSchema } from "@/schemas";
 import prismadb from "@/lib/prismadb";
 import { revalidatePath } from "next/cache";
 import { Role } from "@prisma/client";
+import { auth } from "@/actions/auth";
 export const addEmployee = async (data: z.infer<typeof employeeSchema>) => {
   try {
+    const isAuth = await auth();
+    if (!isAuth) {
+      return { error: "Unauthorized!" };
+    }
     const validatedFields = employeeSchema.safeParse(data);
     if (!validatedFields.success) {
       return { error: "Invalid Fields!" };
@@ -35,6 +40,10 @@ export const addEmployee = async (data: z.infer<typeof employeeSchema>) => {
 
 export const deleteEmployee = async (id: string) => {
   try {
+    const isAuth = await auth();
+    if (!isAuth) {
+      return { error: "Unauthorized!" };
+    }
     const res = await prismadb.employee.delete({
       where: {
         id,
