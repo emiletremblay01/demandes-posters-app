@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
+import { AddPosterButton } from "./btn-add-poster";
 
 export function Combobox({
   data,
@@ -72,11 +73,8 @@ export function Combobox({
           />
           <CommandList>
             <CommandEmpty>
-              <div>Aucun poster trouvé.</div>
-              <Button className="mt-2 h-fit" variant="secondary">
-                Ajouter poster
-                <br /> "{inputTextValue}"
-              </Button>
+              {/* <div>Aucun poster trouvé.</div> */}
+              <AddPosterButton text={inputTextValue} />
             </CommandEmpty>
             <CommandGroup>
               {data.map((item) => (

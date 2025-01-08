@@ -39,11 +39,11 @@ export function AddPosterButton({ text }: { text: string }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <Button
           type="submit"
-          className="w-full"
+          className="h-fit w-fit"
           variant="secondary"
           disabled={isPending}
         >
-          Ajouter
+          Ajouter <br /> "{text}"
         </Button>
       </form>
     </Form>
