@@ -67,7 +67,7 @@ export function Combobox({
         <Command>
           <CommandInput placeholder={placeholder || "Choisir..."} />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>Aucun poster trouvé.</CommandEmpty>
             <CommandGroup>
               {data.map((item) => (
                 <CommandItem
