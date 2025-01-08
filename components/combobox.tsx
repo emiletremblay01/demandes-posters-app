@@ -32,6 +32,7 @@ export function Combobox({
 
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [inputTextValue, setInputTextValue] = useState("");
   const [value, setValue] = useState("");
   const [idValue, setIdValue] = useState("");
 
@@ -65,9 +66,18 @@ export function Combobox({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder={placeholder || "Choisir..."} />
+          <CommandInput
+            placeholder={placeholder || "Choisir..."}
+            onValueChange={setInputTextValue}
+          />
           <CommandList>
-            <CommandEmpty>Aucun poster trouvé.</CommandEmpty>
+            <CommandEmpty>
+              <div>Aucun poster trouvé.</div>
+              <Button className="mt-2 h-fit" variant="secondary">
+                Ajouter poster
+                <br /> "{inputTextValue}"
+              </Button>
+            </CommandEmpty>
             <CommandGroup>
               {data.map((item) => (
                 <CommandItem
