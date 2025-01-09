@@ -43,7 +43,7 @@ export function AddPosterButton({ text }: { text: string }) {
           variant="secondary"
           disabled={isPending}
         >
-          Ajouter <br /> "{text}"
+          Ajouter <br /> <span className="italic">{text}</span>
         </Button>
       </form>
     </Form>
