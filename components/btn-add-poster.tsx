@@ -17,13 +17,14 @@ export function AddPosterButton({ text }: { text: string }) {
   const form = useForm<z.infer<typeof posterSchema>>({
     resolver: zodResolver(posterSchema),
     defaultValues: {
-      name: text,
+      name: "",
     },
   });
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof posterSchema>) {
     startTransition(() => {
+      console.log(values);
       addPoster(values).then((result) => {
         if (result.error) {
           toast(result.error);
