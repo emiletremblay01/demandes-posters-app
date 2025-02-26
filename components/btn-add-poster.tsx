@@ -18,6 +18,7 @@ export function AddPosterButton({ text }: { text: string }) {
   function onSubmit() {
     const values = posterSchema.safeParse({
       name: text,
+      fa: "dif"
     });
     
     if (!values.success) {
