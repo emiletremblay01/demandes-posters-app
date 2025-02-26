@@ -18,17 +18,15 @@ export function AddPosterButton({ text }: { text: string }) {
   function onSubmit() {
     const values = posterSchema.safeParse({
       name: text,
-      fa: "dif"
     });
     
     if (!values.success) {
       console.log(values.error)
-      toast("erreur");
+      toast("erreur, voir console");
       return;
     }
     
     startTransition(() => {
-      console.log(values.data);
       addPoster(values.data).then((result) => {
         if (result.error) {
           toast(result.error);
