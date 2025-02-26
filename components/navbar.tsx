@@ -1,8 +1,9 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { Settings, LogOut, LogIn } from "lucide-react";
+import { Settings, LockKeyholeOpen, LockKeyhole } from "lucide-react";
 import { auth } from "@/actions/auth";
 import Link from "next/link";
+
 export default async function Navbar() {
   const isAuth = await auth();
   return (
@@ -25,7 +26,7 @@ export default async function Navbar() {
           <ModeToggle />
           <div className="relative">
             <Button asChild size="icon" variant="outline">
-              <Link href="/auth">{isAuth ? <LogOut /> : <LogIn />}</Link>
+              <Link href="/auth">{isAuth ? <LockKeyholeOpen /> : <LockKeyhole />}</Link>
             </Button>
             {!isAuth && (
               <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full bg-red-500"></div>
