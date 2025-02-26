@@ -28,8 +28,9 @@ export function AddPosterButton({ text }: { text: string }) {
     });
     
     if (!values.success) {
-        toast(values.error.format());
-        return;
+      console.log(values.error)
+      toast("erreur");
+      return;
     }
     
     startTransition(() => {
