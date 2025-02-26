@@ -22,10 +22,19 @@ export function AddPosterButton({ text }: { text: string }) {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof posterSchema>) {
+  function onSubmit() {
+    const values = posterSchema.safeParse({
+      name: text,
+    });
+    
+    if (!values.success) {
+        toast(values.error);
+        return;
+    }
+    
     startTransition(() => {
-      console.log(values);
-      addPoster(values).then((result) => {
+      console.log(values.data);
+      addPoster(values.data).then((result) => {
         if (result.error) {
           toast(result.error);
           return;
