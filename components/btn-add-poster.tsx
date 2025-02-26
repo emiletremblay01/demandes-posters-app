@@ -13,15 +13,8 @@ import { useTransition } from "react";
 
 export function AddPosterButton({ text }: { text: string }) {
   const [isPending, startTransition] = useTransition();
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof posterSchema>>({
-    resolver: zodResolver(posterSchema),
-    defaultValues: {
-      name: "",
-    },
-  });
-
-  // 2. Define a submit handler.
+  
+  
   function onSubmit() {
     const values = posterSchema.safeParse({
       name: text,
@@ -46,17 +39,13 @@ export function AddPosterButton({ text }: { text: string }) {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Button
-          type="submit"
-          className="h-fit w-fit"
-          variant="secondary"
-          disabled={isPending}
-        >
-          Ajouter <br /> <span className="italic">{text}</span>
-        </Button>
-      </form>
-    </Form>
+    <Button
+      onClick={onSubmit}
+      className="h-fit w-fit"
+      variant="secondary"
+      disabled={isPending}
+    >
+      Ajouter <br /> <span className="italic">{text}</span>
+    </Button>
   );
 }
