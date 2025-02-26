@@ -28,7 +28,7 @@ export function AddPosterButton({ text }: { text: string }) {
     });
     
     if (!values.success) {
-        toast(values.error);
+        toast(values.error.format());
         return;
     }
     
