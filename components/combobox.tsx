@@ -73,8 +73,9 @@ export function Combobox({
           />
           <CommandList>
             <CommandEmpty>
-              {/* <div>Aucun poster trouvé.</div> */}
-              <AddPosterButton text={inputTextValue} />
+              {
+                "role" in data[0] ? <div>Employe inexistant</div> : <AddPosterButton text={inputTextValue} />
+              }    
             </CommandEmpty>
             <CommandGroup>
               {data.map((item) => (
