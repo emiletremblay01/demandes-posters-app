@@ -58,11 +58,14 @@ export function TabsContainer({
     (a, b) => b.numberOfPosterReceived - a.numberOfPosterReceived,
   );
   
-  const groupedPosters = unapprovedPosterRequests.reduce((acc: any, request) => {
-  const title = request.posterTitle;
-  acc[title] = (acc[title] || 0) + 1;
-  return acc;
-}, {});
+  const groupedPosters: Record<string, number> = unapprovedPosterRequests.reduce(
+  (acc, request) => {
+    const title = request.posterTitle;
+    acc[title] = (acc[title] || 0) + 1;
+    return acc;
+  },
+  {} as Record<string, number>
+  );
   
   return (
     <Tabs defaultValue="table" className="w-full">
