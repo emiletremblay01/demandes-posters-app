@@ -57,7 +57,13 @@ export function TabsContainer({
   uniqueGraphObjects.sort(
     (a, b) => b.numberOfPosterReceived - a.numberOfPosterReceived,
   );
-
+  
+  const groupedPosters = unapprovedPosterRequests.reduce((acc, request) => {
+  const title = request.posterTitle;
+  acc[title] = (acc[title] || 0) + 1;
+  return acc;
+}, {});
+  
   return (
     <Tabs defaultValue="table" className="w-full">
       <TabsList className="mb-2 w-full">
@@ -69,6 +75,9 @@ export function TabsContainer({
         </TabsTrigger>
         <TabsTrigger value="historique" className="flex-1">
           Historique
+        </TabsTrigger>
+        <TabsTrigger value="liste" className="flex-1">
+          Liste
         </TabsTrigger>
       </TabsList>
       <TabsContent value="table" className="">
@@ -106,6 +115,24 @@ export function TabsContainer({
             </Table>
           </div>
         </ScrollArea>
+      </TabsContent>
+      <TabsContent value="liste" className="">
+        <Table className="h-full w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Poster</TableHead>
+                  <TableHead>Quantité</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Object.entries(groupedPosters).map(([posterTitle, qty]) => (
+                  <TableRow key={posterTitle}>
+                    <TableCell className="py-2">{posterTitle}</TableCell>
+                    <TableCell className="py-2">{qty}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+        </Table>
       </TabsContent>
     </Tabs>
   );
