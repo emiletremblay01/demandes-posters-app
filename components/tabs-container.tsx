@@ -58,7 +58,7 @@ export function TabsContainer({
     (a, b) => b.numberOfPosterReceived - a.numberOfPosterReceived,
   );
   
-  const groupedPosters = unapprovedPosterRequests.reduce((acc, request) => {
+  const groupedPosters = unapprovedPosterRequests.reduce((acc: any, request) => {
   const title = request.posterTitle;
   acc[title] = (acc[title] || 0) + 1;
   return acc;
