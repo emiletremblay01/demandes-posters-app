@@ -6,7 +6,7 @@ import {
 } from "@/actions/poster-request";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { PosterRequest } from "@prisma/client";
+import type { PosterRequest } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { useTransition } from "react";
