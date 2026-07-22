@@ -1,57 +1,43 @@
 "use server";
 
-import * as z from "zod";
-import { employeeSchema } from "@/schemas";
-import prismadb from "@/lib/prismadb";
-import { revalidatePath } from "next/cache";
-import { Role } from "@prisma/client";
 import { auth } from "@/actions/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import { roles, type Role } from "@/lib/types";
+import { EmployeeModel } from "@/models/employee";
+import { employeeSchema } from "@/schemas";
+import { revalidatePath } from "next/cache";
+import * as z from "zod";
+
 export const addEmployee = async (data: z.infer<typeof employeeSchema>) => {
   try {
-    const isAuth = await auth();
-    if (!isAuth) {
-      return { error: "Unauthorized!" };
-    }
+    if (!(await auth())) return { error: "Unauthorized!" };
+
     const validatedFields = employeeSchema.safeParse(data);
-    if (!validatedFields.success) {
-      return { error: "Invalid Fields!" };
-    }
+    if (!validatedFields.success) return { error: "Invalid Fields!" };
 
     const { name, role } = validatedFields.data;
+    if (!roles.includes(role as Role)) return { error: "Invalid Role!" };
 
-    // if role is not in the enum, return error
-    if (!Object.values(Role).includes(role as Role)) {
-      return { error: "Invalid Role!" };
-    }
-
-    const result = await prismadb.employee.create({
-      data: {
-        name,
-        role: role as Role,
-      },
-    });
-
+    await connectToDatabase();
+    const result = await EmployeeModel.create({ name, role });
     revalidatePath("/settings");
     return { success: `${result.name} successfully added to database!` };
-  } catch (error) {
+  } catch {
     return { error: "Erreur interne!" };
   }
 };
 
 export const deleteEmployee = async (id: string) => {
   try {
-    const isAuth = await auth();
-    if (!isAuth) {
-      return { error: "Unauthorized!" };
-    }
-    const res = await prismadb.employee.delete({
-      where: {
-        id,
-      },
-    });
+    if (!(await auth())) return { error: "Unauthorized!" };
+
+    await connectToDatabase();
+    const result = await EmployeeModel.findByIdAndDelete(id);
+    if (!result) return { error: "Employee not found!" };
+
     revalidatePath("/settings");
-    return { success: `${res.name} successfully deleted from database!` };
-  } catch (error) {
+    return { success: `${result.name} successfully deleted from database!` };
+  } catch {
     return { error: "Employee not found!" };
   }
 };
