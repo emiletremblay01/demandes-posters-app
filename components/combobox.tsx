@@ -1,6 +1,6 @@
 "use client";
 
-import type { Employee, Poster } from "@prisma/client";
+import type { Employee, Poster } from "@/lib/types";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useEffect, useState } from "react";
 
