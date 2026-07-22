@@ -1,7 +1,9 @@
 "use server";
 import { cookies } from "next/headers";
+
 export const auth = async () => {
-  const cookieValue = cookies().get("nip")?.value;
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get("nip")?.value;
 
   if (!cookieValue) {
     return false;
@@ -11,5 +13,5 @@ export const auth = async () => {
     return false;
   }
 
-  return cookieValue == nip;
+  return cookieValue === nip;
 };
