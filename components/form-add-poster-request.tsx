@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Employee, Poster } from "@prisma/client";
+import type { Employee, Poster } from "@/lib/types";
 import {
   Form,
   FormControl,
