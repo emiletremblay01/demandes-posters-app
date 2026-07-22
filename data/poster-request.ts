@@ -1,10 +1,17 @@
-import prismadb from "@/lib/prismadb";
 import { auth } from "@/actions/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import { serializePosterRequest } from "@/lib/serialize";
+import { PosterRequestModel } from "@/models/poster-request";
+
 export const getAllPosterRequests = async () => {
   const isAuth = await auth();
+  await connectToDatabase();
+  const requests = (await PosterRequestModel.find()).map(
+    serializePosterRequest,
+  );
+
   if (!isAuth) {
-    const posterRequests = await prismadb.posterRequest.findMany();
-    return posterRequests.map((request) => ({
+    return requests.map((request) => ({
       ...request,
       employeeName: request.employeeName
         .split(" ")
@@ -13,5 +20,6 @@ export const getAllPosterRequests = async () => {
         .toUpperCase(),
     }));
   }
-  return prismadb.posterRequest.findMany();
+
+  return requests;
 };
