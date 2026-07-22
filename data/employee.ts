@@ -1,44 +1,41 @@
-import prismadb from "@/lib/prismadb";
 import { auth } from "@/actions/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import { serializeEmployee } from "@/lib/serialize";
+import { EmployeeModel } from "@/models/employee";
+
+const anonymizeName = (name: string) =>
+  name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
 
 export const getAllEmployees = async () => {
   const isAuth = await auth();
+  await connectToDatabase();
+  const employees = (await EmployeeModel.find()).map(serializeEmployee);
+
   if (!isAuth) {
-    const employees = await prismadb.employee.findMany();
     return employees.map((employee) => ({
       ...employee,
-      name: employee.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase(),
+      name: anonymizeName(employee.name),
     }));
   }
-  return prismadb.employee.findMany();
+
+  return employees;
 };
 
 export const getEmployeeById = async (id: string) => {
   const isAuth = await auth();
-  if (!isAuth) {
-    const employee = await prismadb.employee.findUnique({
-      where: { id },
-    });
+  await connectToDatabase();
+  const document = await EmployeeModel.findById(id);
 
-    if (employee) {
-      return {
-        ...employee,
-        name: employee.name
-          .split(" ")
-          .map((n) => n[0])
-          .join("")
-          .toUpperCase(),
-      };
-    }
+  if (!document) {
+    return null;
   }
 
-  return prismadb.employee.findUnique({
-    where: {
-      id,
-    },
-  });
+  const employee = serializeEmployee(document);
+  return isAuth
+    ? employee
+    : { ...employee, name: anonymizeName(employee.name) };
 };
