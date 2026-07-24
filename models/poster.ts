@@ -7,8 +7,15 @@ export type PosterDocument = {
 
 const posterSchema = new Schema<PosterDocument>(
   {
-    name: { type: String, required: true, unique: true },
-    quantity: { type: Number, default: null },
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 120,
+    },
+    quantity: { type: Number, default: null, min: 0 },
   },
   {
     collection: "Poster",
