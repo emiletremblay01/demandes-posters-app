@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
 export default function AuthorizePage() {
   const router = useRouter();
@@ -17,34 +17,35 @@ export default function AuthorizePage() {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const handleSubmit = () => {
-    const fetch = async () => {
+    const submitRequest = async () => {
       setIsDisabled(true);
-      let isValid = false;
+
       try {
         const response = await axios.post("/api/auth", { nip: value });
+
         if (response.status === 200) {
-          isValid = true;
           router.push("/");
-          return;
+          router.refresh();
         }
       } catch (error) {
-        console.error(error);
-      } finally {
-        setValue("");
-        if (!isValid) {
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          toast("Trop de tentatives. Réessayez dans une minute.");
+        } else {
           toast("Le NIP est incorrect. Veuillez réessayer.");
         }
+      } finally {
+        setValue("");
         setIsDisabled(false);
-        router.refresh();
       }
     };
-    fetch();
+
+    submitRequest();
   };
+
   useEffect(() => {
-    if (value.length === 4) {
-      setIsDisabled(false);
-    }
+    setIsDisabled(value.length !== 4);
   }, [value]);
+
   return (
     <div className="my-64 flex h-full flex-1 flex-col items-center space-y-4">
       <div className="text-center text-sm">
