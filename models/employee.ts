@@ -1,5 +1,5 @@
-import { model, models, Schema } from "mongoose";
 import { roles, type Role } from "@/lib/types";
+import { model, models, Schema } from "mongoose";
 
 export type EmployeeDocument = {
   name: string;
@@ -8,7 +8,13 @@ export type EmployeeDocument = {
 
 const employeeSchema = new Schema<EmployeeDocument>(
   {
-    name: { type: String, required: true },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 80,
+    },
     role: { type: String, enum: roles, required: true },
   },
   {
