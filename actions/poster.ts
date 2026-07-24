@@ -3,7 +3,7 @@
 import { auth } from "@/actions/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import { PosterModel } from "@/models/poster";
-import { posterSchema } from "@/schemas";
+import { mongoIdSchema, posterSchema } from "@/schemas";
 import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
@@ -15,9 +15,7 @@ export const addPoster = async (data: z.infer<typeof posterSchema>) => {
     if (!validatedFields.success) return { error: "Invalid Fields!" };
 
     await connectToDatabase();
-    const result = await PosterModel.create({
-      name: validatedFields.data.name,
-    });
+    const result = await PosterModel.create(validatedFields.data);
     revalidatePath("/settings");
     return {
       success: `Poster "${result.name}" successfully added to database!`,
@@ -31,8 +29,11 @@ export const deletePoster = async (id: string) => {
   try {
     if (!(await auth())) return { error: "Unauthorized!" };
 
+    const parsedId = mongoIdSchema.safeParse(id);
+    if (!parsedId.success) return { error: "Invalid poster ID!" };
+
     await connectToDatabase();
-    const result = await PosterModel.findByIdAndDelete(id);
+    const result = await PosterModel.findByIdAndDelete(parsedId.data);
     if (!result) return { error: "Poster not found!" };
 
     revalidatePath("/settings");
@@ -40,6 +41,6 @@ export const deletePoster = async (id: string) => {
       success: `Poster "${result.name}" successfully deleted from database!`,
     };
   } catch {
-    return { error: "Poster not found!" };
+    return { error: "Erreur interne!" };
   }
 };
