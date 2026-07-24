@@ -2,9 +2,8 @@
 
 import { auth } from "@/actions/auth";
 import { connectToDatabase } from "@/lib/mongodb";
-import { roles, type Role } from "@/lib/types";
 import { EmployeeModel } from "@/models/employee";
-import { employeeSchema } from "@/schemas";
+import { employeeSchema, mongoIdSchema } from "@/schemas";
 import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
@@ -15,11 +14,8 @@ export const addEmployee = async (data: z.infer<typeof employeeSchema>) => {
     const validatedFields = employeeSchema.safeParse(data);
     if (!validatedFields.success) return { error: "Invalid Fields!" };
 
-    const { name, role } = validatedFields.data;
-    if (!roles.includes(role as Role)) return { error: "Invalid Role!" };
-
     await connectToDatabase();
-    const result = await EmployeeModel.create({ name, role });
+    const result = await EmployeeModel.create(validatedFields.data);
     revalidatePath("/settings");
     return { success: `${result.name} successfully added to database!` };
   } catch {
@@ -31,13 +27,16 @@ export const deleteEmployee = async (id: string) => {
   try {
     if (!(await auth())) return { error: "Unauthorized!" };
 
+    const parsedId = mongoIdSchema.safeParse(id);
+    if (!parsedId.success) return { error: "Invalid employee ID!" };
+
     await connectToDatabase();
-    const result = await EmployeeModel.findByIdAndDelete(id);
+    const result = await EmployeeModel.findByIdAndDelete(parsedId.data);
     if (!result) return { error: "Employee not found!" };
 
     revalidatePath("/settings");
     return { success: `${result.name} successfully deleted from database!` };
   } catch {
-    return { error: "Employee not found!" };
+    return { error: "Erreur interne!" };
   }
 };
