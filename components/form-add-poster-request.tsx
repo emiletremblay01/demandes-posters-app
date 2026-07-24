@@ -88,9 +88,9 @@ export const FormAddPosterRequest = ({
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               <Label>Équipier</Label>
-              <Combobox data={employees} placeholder="Choisir Équipier..." />
+              <Combobox\n                data={employees}\n                type="employee"\n                placeholder="Choisir Équipier..."\n              />
               <Label className="mt-6">Poster</Label>
-              <Combobox data={posters} placeholder="Choisir Poster..." />
+              <Combobox\n                data={posters}\n                type="poster"\n                placeholder="Choisir Poster..."\n              />
               <FormField
                 control={form.control}
                 name="note"
