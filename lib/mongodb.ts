@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
 
-const databaseUrl = process.env.DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is not defined");
-}
-
 declare global {
   var mongooseConnection:
     | {
@@ -30,6 +24,12 @@ export async function connectToDatabase() {
   }
 
   if (!cached.promise) {
+    const databaseUrl = process.env.DATABASE_URL;
+
+    if (!databaseUrl) {
+      throw new Error("DATABASE_URL is not defined");
+    }
+
     cached.promise = mongoose.connect(databaseUrl, {
       bufferCommands: false,
     });
