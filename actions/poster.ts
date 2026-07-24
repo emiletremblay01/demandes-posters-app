@@ -1,55 +1,46 @@
 "use server";
 
-import * as z from "zod";
-import { posterSchema } from "@/schemas";
-import prismadb from "@/lib/prismadb";
-import { revalidatePath } from "next/cache";
 import { auth } from "@/actions/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import { PosterModel } from "@/models/poster";
+import { mongoIdSchema, posterSchema } from "@/schemas";
+import { revalidatePath } from "next/cache";
+import * as z from "zod";
+
 export const addPoster = async (data: z.infer<typeof posterSchema>) => {
   try {
-    const isAuth = await auth();
-    if (!isAuth) {
-      return { error: "Unauthorized!" };
-    }
+    if (!(await auth())) return { error: "Unauthorized!" };
+
     const validatedFields = posterSchema.safeParse(data);
-    if (!validatedFields.success) {
-      return { error: "Invalid Fields!" };
-    }
+    if (!validatedFields.success) return { error: "Invalid Fields!" };
 
-    const { name } = validatedFields.data;
-
-    const result = await prismadb.poster.create({
-      data: {
-        name,
-      },
-    });
-
+    await connectToDatabase();
+    const result = await PosterModel.create(validatedFields.data);
     revalidatePath("/settings");
     return {
       success: `Poster "${result.name}" successfully added to database!`,
     };
-  } catch (error) {
+  } catch {
     return { error: "Erreur interne!" };
   }
 };
 
 export const deletePoster = async (id: string) => {
   try {
-    const isAuth = await auth();
-    if (!isAuth) {
-      return { error: "Unauthorized!" };
-    }
-    const res = await prismadb.poster.delete({
-      where: {
-        id,
-      },
-    });
+    if (!(await auth())) return { error: "Unauthorized!" };
+
+    const parsedId = mongoIdSchema.safeParse(id);
+    if (!parsedId.success) return { error: "Invalid poster ID!" };
+
+    await connectToDatabase();
+    const result = await PosterModel.findByIdAndDelete(parsedId.data);
+    if (!result) return { error: "Poster not found!" };
+
     revalidatePath("/settings");
     return {
-      success: `Poster "${res.name}" successfully deleted from database!`,
+      success: `Poster "${result.name}" successfully deleted from database!`,
     };
-  } catch (error) {
-    console.error(error);
-    return { error: "Poster not found!" };
+  } catch {
+    return { error: "Erreur interne!" };
   }
 };

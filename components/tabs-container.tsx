@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/datatable/columns";
 
-import type { PosterRequest } from "@prisma/client";
+import type { PosterRequest } from "@/lib/types";
 import { ChartPosters } from "./chart-posters";
 
 export function TabsContainer({

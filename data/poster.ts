@@ -1,13 +1,15 @@
-import prismadb from "@/lib/prismadb";
+import { connectToDatabase } from "@/lib/mongodb";
+import { serializePoster } from "@/lib/serialize";
+import { PosterModel } from "@/models/poster";
 
 export const getAllPosters = async () => {
-  return prismadb.poster.findMany();
+  await connectToDatabase();
+  const posters = await PosterModel.find();
+  return posters.map(serializePoster);
 };
 
 export const getPosterById = async (id: string) => {
-  return prismadb.poster.findUnique({
-    where: {
-      id,
-    },
-  });
+  await connectToDatabase();
+  const poster = await PosterModel.findById(id);
+  return poster ? serializePoster(poster) : null;
 };

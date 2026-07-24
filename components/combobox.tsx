@@ -1,9 +1,5 @@
 "use client";
 
-import type { Employee, Poster } from "@prisma/client";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useEffect, useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,38 +14,43 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import type { Employee, Poster } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { AddPosterButton } from "./btn-add-poster";
 
-export function Combobox({
-  data,
-  placeholder,
-}: {
+type ComboboxProps = {
   data: (Employee | Poster)[];
+  type: "employee" | "poster";
   placeholder?: string;
-}) {
-  const searchParams = useSearchParams();
+};
 
+export function Combobox({ data, type, placeholder }: ComboboxProps) {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [inputTextValue, setInputTextValue] = useState("");
   const [value, setValue] = useState("");
-  const [idValue, setIdValue] = useState("");
 
-  useEffect(() => {
-    const employee = searchParams.get("employee");
-    const poster = searchParams.get("poster");
-    if ("role" in data[0]) {
-      router.replace(`/?employee=${idValue}&poster=${poster}`, {
-        scroll: false,
-      });
-      return;
+  const handleSelect = (item: Employee | Poster) => {
+    const isSelected = item.name === value;
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (isSelected) {
+      params.delete(type);
+      setValue("");
+    } else {
+      params.set(type, item.id);
+      setValue(item.name);
     }
-    router.replace(`/?employee=${employee}&poster=${idValue}`, {
-      scroll: false,
-    });
-  }, [idValue]);
+
+    const query = params.toString();
+    router.replace(query ? `/?${query}` : "/", { scroll: false });
+    setOpen(false);
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -59,9 +60,7 @@ export function Combobox({
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {value
-            ? data.find((item) => item.name === value)?.name
-            : placeholder || "Choisir..."}
+          {value || placeholder || "Choisir..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -73,20 +72,18 @@ export function Combobox({
           />
           <CommandList>
             <CommandEmpty>
-              {
-                "role" in data[0] ? <div>Employe inexistant</div> : <AddPosterButton text={inputTextValue} />
-              }    
+              {type === "employee" ? (
+                <div>Employé inexistant</div>
+              ) : (
+                <AddPosterButton text={inputTextValue} />
+              )}
             </CommandEmpty>
             <CommandGroup>
               {data.map((item) => (
                 <CommandItem
-                  key={item.name}
+                  key={item.id}
                   value={item.name}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setIdValue(item.id);
-                    setOpen(false);
-                  }}
+                  onSelect={() => handleSelect(item)}
                 >
                   <Check
                     className={cn(

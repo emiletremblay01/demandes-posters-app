@@ -1,7 +1,7 @@
-import { cookies } from "next/headers";
 import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default function LogOutPage() {
   return (
@@ -10,17 +10,11 @@ export default function LogOutPage() {
         Vous êtes connecté et pouvez intéragir avec les données.
       </h1>
       <form
-        className=""
         action={async () => {
           "use server";
-          try {
-            cookies().delete("nip");
-          } catch (error) {
-            console.error(error);
-          } finally {
-            revalidatePath("/");
-            redirect("/");
-          }
+          cookies().delete("session");
+          revalidatePath("/");
+          redirect("/");
         }}
       >
         <Button type="submit">Se déconnecter</Button>

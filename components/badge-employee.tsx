@@ -1,5 +1,5 @@
 "use client";
-import type { Employee } from "@prisma/client";
+import type { Employee } from "@/lib/types";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
